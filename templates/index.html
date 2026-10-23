@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ app_name }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <a class="brand" href="/" aria-label="Knowledge Desk home">
+          <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span>KNOWLEDGE<span class="brand-light">DESK</span></span>
+        </a>
+        <div class="workspace-label">YOUR WORKSPACE</div>
+        <div class="workspace-switcher"><span class="workspace-icon">IT</span><span><strong>IT Operations</strong><small>Company knowledge</small></span><span class="chevron"></span></div>
+        <div class="brand-badge"><span class="badge-spark">✳</span> FDE PROJECT</div>
+        <h1>Support,<br/><span>with context.</span></h1>
+        <p class="muted">Private company knowledge first. External sources only when evidence is thin.</p>
+      </div>
+
+      <div class="workflow-card">
+        <div class="workflow-heading"><span class="pulse-mark"></span><h3>Answer pipeline</h3></div>
+        <div class="flow-step"><span>01</span>Route the question</div>
+        <div class="flow-step"><span>02</span>Search private knowledge</div>
+        <div class="flow-step"><span>03</span>Verify the evidence</div>
+        <div class="flow-step"><span>04</span>Use web fallback if needed</div>
+        <div class="flow-step"><span>05</span>Return a grounded answer</div>
+      </div>
+
+      <div class="sidebar-bottom">
+        <button id="openUpload" class="secondary-btn"><span aria-hidden="true">＋</span> Add company document</button>
+        <div class="privacy-note"><span class="privacy-icon">◈</span><span><strong>Private by default</strong><small>Company sources are prioritized</small></span></div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="topbar-title">
+          <span class="status-dot"></span>
+          <span>Enterprise Knowledge Copilot</span>
+          <span class="topbar-divider">/</span>
+          <span class="topbar-current">IT Support</span>
+        </div>
+        <div class="topbar-meta"><span class="secure-label"><span>◆</span> SECURE SESSION</span><span class="pill">AGENTIC RAG</span><button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false"><span class="theme-icon" aria-hidden="true">◐</span><span class="theme-label">Dark</span></button></div>
+      </header>
+
+      <section id="chat" class="chat-area">
+        <div class="message assistant">
+          <div class="avatar" aria-hidden="true"><span>✳</span></div>
+          <div class="bubble">
+            <div class="message-meta"><strong>Knowledge Desk</strong><span>JUST NOW</span></div>
+            <strong class="welcome-title">What can I help you solve?</strong>
+            <p>Ask about company IT policies, access, devices, or troubleshooting. I’ll show where the answer came from.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="composer-wrap">
+        <div class="suggestion-heading"><span>QUICK START</span><span>Pick a question to begin</span></div>
+        <div class="examples">
+          <button class="example" data-question="How do I connect to the company VPN?"><span class="example-icon" aria-hidden="true">↗</span>How do I connect to the company VPN?</button>
+          <button class="example" data-question="What is our password reset policy?"><span class="example-icon" aria-hidden="true">⌁</span>What is our password reset policy?</button>
+          <button class="example" data-question="What is the latest Microsoft Teams outage guidance?"><span class="example-icon" aria-hidden="true">◷</span>Latest Microsoft Teams outage guidance</button>
+        </div>
+        <form id="chatForm" class="composer">
+          <label class="sr-only" for="question">Ask an IT support question</label>
+          <textarea id="question" rows="1" placeholder="Ask a question about IT support..." required></textarea>
+          <div class="composer-actions"><span class="composer-hint">Company knowledge is searched first</span><button type="submit" class="send-btn"><span>Ask agent</span><span class="send-arrow" aria-hidden="true">↑</span></button></div>
+        </form>
+        <p class="disclaimer">AI-generated answers can be wrong. Verify important changes with your IT team.</p>
+      </section>
+    </main>
+
+    <aside class="trace-panel">
+      <div class="trace-header"><div><span class="panel-kicker">LIVE OBSERVABILITY</span><h2>Agent trace</h2></div><span class="trace-live"><span></span> READY</span></div>
+      <p class="muted">Follow the reasoning path for each response.</p>
+      <div class="trace-section-label">WORKFLOW EVENTS</div>
+      <div id="trace" class="trace-list"><div class="empty">No request yet.</div></div>
+      <div class="source-box">
+        <div class="source-icon" aria-hidden="true">⌕</div>
+        <div><span>ANSWER SOURCE</span><strong id="sourceUsed">Waiting for a question</strong></div>
+      </div>
+      <div class="trace-footnote"><span>i</span> Sources are checked for relevance before an answer is returned.</div>
+    </aside>
+  </div>
+
+  <div id="uploadModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="uploadTitle">
+    <div class="modal-card">
+      <div class="modal-head"><div><span class="panel-kicker">KNOWLEDGE BASE</span><h2 id="uploadTitle">Add a company document</h2></div><button id="closeUpload" aria-label="Close upload dialog">×</button></div>
+      <p class="muted">Upload a PDF, text, Markdown, or DOCX file to make it searchable by the assistant.</p>
+      <label class="field-label" for="adminKey">Admin API key</label>
+      <input id="adminKey" type="password" placeholder="Enter admin key" autocomplete="off" />
+      <label class="field-label" for="fileInput">Document</label>
+      <input id="fileInput" type="file" accept=".pdf,.txt,.md,.docx" />
+      <button id="uploadBtn" class="send-btn full"><span>Index document</span><span aria-hidden="true">↑</span></button>
+      <div id="uploadStatus" class="upload-status" role="status" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
